@@ -104,12 +104,21 @@ function syncBackDesign() {
     el.backDesign.value = front;
     return;
   }
+const placementMode = document.getElementById('placementMode');
+const backWrap = document.getElementById('backWrap');
+const backDesign = document.getElementById('backDesign');
 
-  el.backDesign.disabled = false;
-  el.backDesign.innerHTML = DESIGN_LIST
-    .filter(d => d.id !== front)
-    .map(d => `<option value="${d.id}">${d.label}</option>`)
-    .join("");
+function toggleBackDesign() {
+  const showBack = placementMode.value === 'front-back';
+  backWrap.style.display = showBack ? 'block' : 'none';
+
+  if (!showBack) {
+    backDesign.value = '';
+  }
+}
+
+placementMode.addEventListener('change', toggleBackDesign);
+window.addEventListener('DOMContentLoaded', toggleBackDesign);
 }
 
 function findCombo() {
