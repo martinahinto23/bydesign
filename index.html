@@ -1,154 +1,98 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Design Here</title>
-  <link rel="stylesheet" href="./style.css" />
-</head>
-<body>
-  <div id="designerApp">
-    <div class="wrap">
-      <div class="card">
-        <div class="header">
-          <h1>Design Studio</h1>
-          <p>Choose your garment, size, color, and placement before previewing and adding to cart.</p>
-        </div>
+<div id="designerApp">
+  <div class="wrap">
+    <div class="card">
+      <div class="header">
+        <h1>Design Studio</h1>
+        <p>Choose your garment, size, color, and placement before previewing and adding to cart.</p>
+      </div>
 
-        <div class="grid">
-          <div class="form">
-            <div class="row">
-              <div class="field">
-                <label for="garmentType">Garment type</label>
-                <select id="garmentType">
-                  <option value="">Select garment</option>
-                  <option value="tee">Tee</option>
-                  <option value="hoodie">Hoodie</option>
-                  <option value="sweatshirt">Sweatshirt</option>
-                  <option value="sweatshirt">Long sleeve</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="size">Size</label>
-                <select id="size">
-                  <option value="">Select size</option>
-                  <option>S</option>
-                  <option>M</option>
-                  <option>L</option>
-                  <option>XL</option>
-                  <option>2XL</option>
-                  <option>3XL</option>
-                  <option>4XL</option>
-                  <option>5XL</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="field">
-                <label for="color">Color</label>
-                <select id="color">
-                  <option value="">Select color</option>
-                  <option>Black</option>
-                  <option>White</option>
-                  <option>Forest Green</option>
-                  <option>Red</option>
-                  <option>Gold</option>
-                  <option>Team Royal</option>
-                  <option>Graphite Heather</option>
-                </select>
-              </div>
-<div class="field">
-  <label for="placement">One Design or Two?</label>
-  <select id="placement">
-    <option value="">Select placement</option>
-    <option value="front_only">Front only</option>
-    <option value="same">Front + Back same design</option>
-    <option value="split">Front + Back different designs</option>
-  </select>
-</div>
-
-<div class="field">
-  <label for="frontDesign">Front design</label>
-  <select id="frontDesign"></select>
-</div>
-
-<div class="field back-wrap" id="backWrap" style="display:none;">
-  <label for="backDesign">Back design</label>
-  <select id="backDesign"></select>
-</div>
-
-<div class="field">
-  <label for="garment">Garment type</label>
-  <select id="garment"></select>
-</div>
-
-
+      <div class="grid">
+        <div class="form">
+          <div class="row">
             <div class="field">
-              <label for="frontDesign"> Designs</label>
-              <select id="frontDesign">
-                  <option value="design-1">Embrace the Faith</option>
-               <option value="design-2">Lift Love</option>
-               <option value="design-3">Sleeping won't save you</option>
-               <option value="design-2">Love & Clarity Will</option>
-               <option value="design-3">Liberty Lives</option> 
-               <option value="design-2">Resist</option>
-               <option value="design-3">Helping Hands (HH)</option>
-               <option value="design-2">Newton</option>
-               <option value="design-3">Halt the Hate</option>
-               <option value="design-2">Democracy won't fade on us</option>
-               <option value="design-3">Diversity Earth (Equity) Inclusion</option>
+              <label for="garment">Garment type</label>
+              <select id="garment">
+                <option value="">Select garment</option>
+                <option value="tee">Tee</option>
+                <option value="long_sleeve">Long sleeve</option>
+                <option value="hoodie">Hoodie</option>
+                <option value="sweatshirt">Sweatshirt</option>
               </select>
             </div>
 
-            <div class="field back-wrap" id="backWrap" style="display:none;">
-  <label for="backDesign">Back design</label>
-  <select id="backDesign">
-    <option value="">Select back design</option>
-    <option value="design-1">Embrace the Faith</option>
-    <option value="design-2">Lift Love</option>
-    <option value="design-3">Sleeping won't save you</option>
-    <option value="design-4">Love & Clarity Will</option>
-    <option value="design-5">Liberty Lives</option>
-    <option value="design-6">Resist</option>
-    <option value="design-7">Helping Hands (HH)</option>
-    <option value="design-8">Newton</option>
-    <option value="design-9">Halt the Hate</option>
-    <option value="design-10">Democracy won't fade on us</option>
-    <option value="design-11">Diversity Earth (Equity) Inclusion</option>
-  </select>
-            </div>
-
-            <div class="actions">
-              <button class="btn preview" id="previewBtn" type="button">Preview</button>
-              <button class="btn cart" id="cartBtn" type="button">Add to cart</button>
+            <div class="field">
+              <label for="size">Size</label>
+              <select id="size">
+                <option value="">Select size</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="2XL">2XL</option>
+                <option value="3XL">3XL</option>
+              </select>
             </div>
           </div>
 
-          <div class="preview">
-            <div class="preview-box" id="previewBox">
-              <div>
-                <strong>Preview Area</strong>
-                Your garment preview will appear here.
-              </div>
+          <div class="row">
+            <div class="field">
+              <label for="color">Color</label>
+              <select id="color">
+                <option value="">Select color</option>
+                <option value="blue">Blue</option>
+                <option value="black">Black</option>
+                <option value="red">Red</option>
+                <option value="grey">Grey</option>
+                <option value="white">White</option>
+              </select>
             </div>
 
-            <div class="summary" id="summary">
-              <strong>Selection summary</strong><br />
-              Garment: —<br />
-              Size: —<br />
-              Color: —<br />
-              Placement: —<br />
-              Front design: —<br />
-              Back design: —
+            <div class="field">
+              <label for="placement">One Design or Two?</label>
+              <select id="placement">
+                <option value="">Select placement</option>
+                <option value="front_only">Front only</option>
+                <option value="same">Front + Back same design</option>
+                <option value="freestyle">Front + Back different designs</option>
+              </select>
             </div>
+          </div>
+
+          <div class="field">
+            <label for="frontDesign">Design 1</label>
+            <select id="frontDesign"></select>
+          </div>
+
+          <div class="field back-wrap" id="backWrap">
+            <label for="backDesign">Back design</label>
+            <select id="backDesign"></select>
+          </div>
+
+          <div class="actions">
+            <button class="btn preview" id="previewBtn" type="button">Preview</button>
+            <button class="btn cart" id="cartBtn" type="button">Add to cart</button>
+          </div>
+        </div>
+
+        <div class="preview">
+          <div class="preview-box" id="previewBox">
+            <div>
+              <strong>Preview Area</strong>
+              Your garment preview will appear here.
+            </div>
+          </div>
+
+          <div class="summary" id="summary">
+            <strong>Selection summary</strong><br />
+            Garment: —<br />
+            Size: —<br />
+            Color: —<br />
+            Placement: —<br />
+            Front design: —<br />
+            Back design: —
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <script src="./script.js"></script>
-</body>
-</html>
+</div>
