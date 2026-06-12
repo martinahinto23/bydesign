@@ -21,12 +21,14 @@ const GARMENTS = [
   { id: "sweatshirt", label: "Sweatshirt" }
 ];
 
-const COLORS = [
-  { id: "blue", label: "Blue" },
+const COLOR_LIST = [
   { id: "black", label: "Black" },
+  { id: "white", label: "White" },
+  { id: "forest_green", label: "Forest Green" },
   { id: "red", label: "Red" },
-  { id: "grey", label: "Grey" },
-  { id: "white", label: "White" }
+  { id: "gold", label: "Gold" },
+  { id: "team_royal", label: "Team Royal" },
+  { id: "graphite_heather", label: "Graphite Heather" }
 ];
 
 const PLACEMENT = [
