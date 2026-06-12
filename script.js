@@ -24,9 +24,9 @@ const GARMENTS = [
 
 const COLORS = ["blue", "black", "red", "grey", "white"];
 const SIZES = ["S", "M", "L", "XL", "2XL", "3XL"];
-const PLACEMENTS = ["same", "split", "front_only"];
 
 const el = {};
+
 document.addEventListener("DOMContentLoaded", async () => {
   el.garment = document.getElementById("garment");
   el.placement = document.getElementById("placement");
@@ -34,11 +34,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   el.size = document.getElementById("size");
   el.frontDesign = document.getElementById("frontDesign");
   el.backDesign = document.getElementById("backDesign");
+  el.backWrap = document.getElementById("backWrap");
   el.submit = document.getElementById("submit");
   el.status = document.getElementById("status");
 
   fillSelect(el.garment, GARMENTS);
-  fillSelect(el.placement, PLACEMENTS.map(v => ({ id: v, label: v })));
+  fillSelect(el.placement, [
+    { id: "", label: "Select placement" },
+    { id: "front_only", label: "Front only" },
+    { id: "same", label: "Front + Back same design" },
+    { id: "split", label: "Front + Back different designs" }
+  ]);
   fillSelect(el.color, COLORS.map(v => ({ id: v, label: v })));
   fillSelect(el.size, SIZES.map(v => ({ id: v, label: v })));
   fillSelect(el.frontDesign, DESIGN_LIST);
@@ -55,7 +61,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function fillSelect(selectEl, items) {
-  selectEl.innerHTML = items.map(i => `<option value="${i.id}">${i.label}</option>`).join("");
+  selectEl.innerHTML = `<option value="">Select</option>` + items.map(i =>
+    `<option value="${i.id}">${i.label}</option>`
+  ).join("");
 }
 
 function buildCombos() {
@@ -90,125 +98,36 @@ function buildCombos() {
 
 function syncBackDesign() {
   const placement = el.placement.value;
-  const front = el.frontDesign.value;
 
-  if (placement === "front_only") {
+  if (placement === "front_only" || placement === "") {
+    el.backWrap.style.display = "none";
+    el.backDesign.value = "";
     el.backDesign.disabled = true;
-    el.backDesign.innerHTML = `<option value="">None</option>`;
     return;
   }
+
+  el.backWrap.style.display = "block";
+  el.backDesign.disabled = false;
 
   if (placement === "same") {
+    el.backDesign.value = el.frontDesign.value;
     el.backDesign.disabled = true;
-    el.backDesign.innerHTML = `<option value="${front}">${front}</option>`;
-    el.backDesign.value = front;
-    return;
+  } else {
+    el.backDesign.disabled = false;
+    if (el.backDesign.value === el.frontDesign.value) {
+      el.backDesign.value = "";
+    }
   }
-const placementMode = document.getElementById('placementMode');
-const backWrap = document.getElementById('backWrap');
-const backDesign = document.getElementById('backDesign');
-
-function toggleBackDesign() {
-  const showBack = placementMode.value === 'front-back';
-  backWrap.style.display = showBack ? 'block' : 'none';
-
-  if (!showBack) {
-    backDesign.value = '';
-  }
-}
-
-placementMode.addEventListener('change', toggleBackDesign);
-window.addEventListener('DOMContentLoaded', toggleBackDesign);
 }
 
 function findCombo() {
   const placement = el.placement.value;
   const front = el.frontDesign.value;
-  const back = placement === "front_only" ? null : el.backDesign.value;
+  const back = placement === "same" ? front : el.backDesign.value;
 
-  return COMBOS.find(c => {
-    if (c.placement_mode !== placement) return false;
-    if (c.front_design !== front) return false;
-    if (placement === "same") return c.back_design === front;
-    if (placement === "split") return c.back_design === back;
-    return true;
-  });
-}
-
-function findVariant() {
-  if (!VARIANTS) return null;
-
-  const garmentId = el.garment.value;
-  const color = el.color.value;
-  const size = el.size.value;
-
-  const garment = VARIANTS.garments.find(g => g.id === garmentId);
-  if (!garment) return null;
-
-  const variant = (garment.variants || []).find(v =>
-    v.color === color && v.size === size
+  return COMBOS.find(c =>
+    c.placement_mode === placement &&
+    c.front_design === front &&
+    (placement === "same" ? c.back_design === front : c.back_design === back)
   );
-
-  if (!variant) {
-    return {
-      garment_id: garmentId,
-      printful_product_id: garment.printful_product_id,
-      color,
-      size,
-      variant_id: null
-    };
-  }
-
-  return {
-    garment_id: garmentId,
-    printful_product_id: garment.printful_product_id,
-    color,
-    size,
-    variant_id: variant.variant_id
-  };
-}
-
-async function loadVariants() {
-  try {
-    const res = await fetch("variants.json");
-    VARIANTS = await res.json();
-    setStatus("Ready.");
-  } catch (e) {
-    setStatus("Could not load variants.json");
-  }
-}
-
-function submitSelection() {
-  const combo = findCombo();
-  const variant = findVariant();
-
-  if (!combo) {
-    setStatus("No matching combo found.");
-    return;
-  }
-
-  if (!variant || !variant.variant_id) {
-    setStatus("No matching Printful variant found.");
-    return;
-  }
-
-  const payload = {
-    combo_id: combo.combo_id,
-    placement_mode: combo.placement_mode,
-    front_design: combo.front_design,
-    back_design: combo.back_design,
-    garment_id: variant.garment_id,
-    printful_product_id: variant.printful_product_id,
-    variant_id: variant.variant_id,
-    color: variant.color,
-    size: variant.size
-  };
-
-  setStatus("Selection ready.");
-  window.parent.postMessage({ type: "design-selection", payload }, "*");
-  console.log(payload);
-}
-
-function setStatus(msg) {
-  if (el.status) el.status.textContent = msg;
 }
