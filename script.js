@@ -14,21 +14,20 @@ const DESIGN_LIST = [
   { id: "design-11", label: "Diversity Earth (Equity) Inclusion" }
 ];
 
-const GARMENTS = [
-  { id: "tee", label: "Tee" },
-  { id: "long_sleeve", label: "Long Sleeve" },
-  { id: "hoodie", label: "Hoodie" },
-  { id: "sweatshirt", label: "Sweatshirt" }
-];
-
-const COLOR_LIST = [
+const COLORS = [
   { id: "black", label: "Black" },
   { id: "white", label: "White" },
-  { id: "forest_green", label: "Forest Green" },
+  { id: "forest-green", label: "Forest Green" },
   { id: "red", label: "Red" },
   { id: "gold", label: "Gold" },
-  { id: "team_royal", label: "Team Royal" },
-  { id: "graphite_heather", label: "Graphite Heather" }
+  { id: "team-royal", label: "Team Royal" },
+  { id: "graphite-heather", label: "Graphite Heather" }
+];
+
+const GARMENTS = [
+  { id: "tee", label: "Tee" },
+  { id: "hoodie", label: "Hoodie" },
+  { id: "sweatshirt", label: "Sweatshirt" }
 ];
 
 const PLACEMENT = [
@@ -40,6 +39,7 @@ const PLACEMENT = [
 const el = {};
 
 document.addEventListener("DOMContentLoaded", async () => {
+
   el.garment = document.getElementById("garment");
   el.size = document.getElementById("size");
   el.color = document.getElementById("color");
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   el.front = document.getElementById("frontDesign");
   el.back = document.getElementById("backDesign");
   el.backWrap = document.getElementById("backWrap");
-  el.previewBox = document.getElementById("previewBox");
+  el.preview = document.getElementById("previewBox");
   el.summary = document.getElementById("summary");
 
   fill(el.garment, GARMENTS);
@@ -57,16 +57,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   fill(el.front, DESIGN_LIST);
   fill(el.back, DESIGN_LIST);
 
-  await loadVariants();
-
-  el.placement.addEventListener("change", syncUI);
-  el.front.addEventListener("change", syncUI);
-  el.back.addEventListener("change", syncUI);
+  el.placement.addEventListener("change", sync);
+  el.front.addEventListener("change", sync);
+  el.back.addEventListener("change", sync);
 
   document.getElementById("previewBtn").onclick = render;
   document.getElementById("cartBtn").onclick = submit;
 
-  syncUI();
+  sync();
   render();
 });
 
@@ -76,23 +74,19 @@ function fill(select, items){
     items.map(i => `<option value="${i.id}">${i.label}</option>`).join("");
 }
 
-function syncUI(){
+function sync(){
   const mode = el.placement.value;
 
-  if(mode === "front_only"){
-    el.backWrap.style.display = "none";
-  }
+  el.backWrap.style.display =
+    mode === "freestyle" ? "block" : "none";
 
   if(mode === "same"){
-    el.backWrap.style.display = "none";
-  }
-
-  if(mode === "freestyle"){
-    el.backWrap.style.display = "block";
+    el.back.value = el.front.value;
   }
 }
 
 function render(){
+
   const front = el.front.selectedOptions[0]?.textContent || "—";
   const back = el.back.selectedOptions[0]?.textContent || "—";
 
@@ -111,7 +105,7 @@ function render(){
 
   el.summary.innerHTML = summary;
 
-  el.previewBox.innerHTML = `
+  el.preview.innerHTML = `
     <div>
       <strong>Preview</strong><br>
       ${front}<br>

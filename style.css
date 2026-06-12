@@ -40,12 +40,9 @@ body {
 }
 
 .header h1 { margin: 0; }
-.header p { color: var(--muted); margin: 6px 0 0; }
+.header p { margin: 6px 0 0; color: var(--muted); }
 
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-}
+.grid { display: grid; grid-template-columns: 1fr; }
 
 .form {
   padding: 18px;
@@ -63,9 +60,7 @@ body {
   gap: 12px;
 }
 
-.field {
-  margin-bottom: 12px;
-}
+.field { margin-bottom: 12px; }
 
 label {
   font-size: 13px;
@@ -78,7 +73,6 @@ select {
   border-radius: 12px;
   border: 1px solid var(--border);
   padding: 0 10px;
-  font-size: 15px;
 }
 
 .back-wrap { display: none; }
@@ -104,19 +98,18 @@ select {
 .actions {
   display: grid;
   gap: 10px;
-  margin-top: 10px;
 }
 
 button {
   height: 48px;
-  border-radius: 12px;
   border: none;
-  cursor: pointer;
+  border-radius: 12px;
   font-weight: 700;
+  cursor: pointer;
 }
 
 .preview { background: var(--accent-soft); }
-.cart { background: var(--accent); color: #fff; }
+.cart { background: var(--accent); color: white; }
 
 @media(min-width:768px){
   .grid { grid-template-columns: 1fr 1fr; }
