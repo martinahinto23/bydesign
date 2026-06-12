@@ -59,17 +59,31 @@
                   <option>Graphite Heather</option>
                 </select>
               </div>
+<div class="field">
+  <label for="placement">One Design or Two?</label>
+  <select id="placement">
+    <option value="">Select placement</option>
+    <option value="front_only">Front only</option>
+    <option value="same">Front + Back same design</option>
+    <option value="split">Front + Back different designs</option>
+  </select>
+</div>
 
-              <div class="field">
-                <label for="placementMode">One Design or Two?</label>
-                <select id="placementMode">
-                  <option value="">Select placement</option>
-                  <option value="front">Front only</option>
-                  <option value="back">Back only</option>
-                  <option value="front-back">Front + Back</option>
-                </select>
-              </div>
-            </div>
+<div class="field">
+  <label for="frontDesign">Front design</label>
+  <select id="frontDesign"></select>
+</div>
+
+<div class="field back-wrap" id="backWrap" style="display:none;">
+  <label for="backDesign">Back design</label>
+  <select id="backDesign"></select>
+</div>
+
+<div class="field">
+  <label for="garment">Garment type</label>
+  <select id="garment"></select>
+</div>
+
 
             <div class="field">
               <label for="frontDesign"> Designs</label>
