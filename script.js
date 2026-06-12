@@ -1,23 +1,22 @@
-let COMBOS = null;
 let VARIANTS = null;
 
 const DESIGN_LIST = [
-  { id: "Faith", label: "Embrace the Faith" },
-  { id: "LiftLove", label: "Lift Love" },
-  { id: "Sleepin", label: "Sleeping won't save you" },
-  { id: "LCW", label: "Love & Clarity Will" },
-  { id: "LeftLives", label: "Liberty Lives" },
-  { id: "RTR", label: "Resist" },
-  { id: "HH", label: "Helping Hands (HH)" },
-  { id: "Newton", label: "Newton" },
-  { id: "Halt", label: "Halt the Hate" },
-  { id: "Demo", label: "Democracy won't fade on us" },
-  { id: "DEI", label: "Diversity Earth (Equity) Inclusion" }
+  { id: "design-1", label: "Embrace the Faith" },
+  { id: "design-2", label: "Lift Love" },
+  { id: "design-3", label: "Sleeping won't save you" },
+  { id: "design-4", label: "Love & Clarity Will" },
+  { id: "design-5", label: "Liberty Lives" },
+  { id: "design-6", label: "Resist" },
+  { id: "design-7", label: "Helping Hands (HH)" },
+  { id: "design-8", label: "Newton" },
+  { id: "design-9", label: "Halt the Hate" },
+  { id: "design-10", label: "Democracy won't fade on us" },
+  { id: "design-11", label: "Diversity Earth (Equity) Inclusion" }
 ];
 
 const GARMENTS = [
   { id: "tee", label: "Tee" },
-  { id: "long_sleeve", label: "Long sleeve" },
+  { id: "long_sleeve", label: "Long Sleeve" },
   { id: "hoodie", label: "Hoodie" },
   { id: "sweatshirt", label: "Sweatshirt" }
 ];
@@ -30,215 +29,112 @@ const COLORS = [
   { id: "white", label: "White" }
 ];
 
-const SIZES = [
-  { id: "S", label: "S" },
-  { id: "M", label: "M" },
-  { id: "L", label: "L" },
-  { id: "XL", label: "XL" },
-  { id: "2XL", label: "2XL" },
-  { id: "3XL", label: "3XL" }
+const PLACEMENT = [
+  { id: "front_only", label: "Front Only" },
+  { id: "same", label: "Front + Back Same" },
+  { id: "freestyle", label: "Front + Back Freestyle" }
 ];
 
 const el = {};
 
 document.addEventListener("DOMContentLoaded", async () => {
   el.garment = document.getElementById("garment");
-  el.placement = document.getElementById("placement");
-  el.color = document.getElementById("color");
   el.size = document.getElementById("size");
-  el.frontDesign = document.getElementById("frontDesign");
-  el.backDesign = document.getElementById("backDesign");
+  el.color = document.getElementById("color");
+  el.placement = document.getElementById("placement");
+  el.front = document.getElementById("frontDesign");
+  el.back = document.getElementById("backDesign");
   el.backWrap = document.getElementById("backWrap");
-  el.previewBtn = document.getElementById("previewBtn");
-  el.cartBtn = document.getElementById("cartBtn");
-  el.summary = document.getElementById("summary");
   el.previewBox = document.getElementById("previewBox");
+  el.summary = document.getElementById("summary");
 
-  fillSelect(el.garment, GARMENTS);
-  fillSelect(el.color, COLORS);
-  fillSelect(el.size, SIZES);
-  fillSelect(el.frontDesign, DESIGN_LIST);
-  fillSelect(el.backDesign, DESIGN_LIST);
+  fill(el.garment, GARMENTS);
+  fill(el.size, ["S","M","L","XL","2XL","3XL"].map(x=>({id:x,label:x})));
+  fill(el.color, COLORS);
+  fill(el.placement, PLACEMENT);
+  fill(el.front, DESIGN_LIST);
+  fill(el.back, DESIGN_LIST);
 
-  COMBOS = buildCombos();
   await loadVariants();
 
-  el.placement.addEventListener("change", syncBackDesign);
-  el.frontDesign.addEventListener("change", syncBackDesign);
-  el.previewBtn.addEventListener("click", renderPreviewAndSummary);
-  el.cartBtn.addEventListener("click", submitSelection);
+  el.placement.addEventListener("change", syncUI);
+  el.front.addEventListener("change", syncUI);
+  el.back.addEventListener("change", syncUI);
 
-  syncBackDesign();
-  renderPreviewAndSummary();
+  document.getElementById("previewBtn").onclick = render;
+  document.getElementById("cartBtn").onclick = submit;
+
+  syncUI();
+  render();
 });
 
-function fillSelect(selectEl, items) {
-  selectEl.innerHTML = `<option value="">Select</option>` + items.map(i =>
-    `<option value="${i.id}">${i.label}</option>`
-  ).join("");
+function fill(select, items){
+  select.innerHTML =
+    `<option value="">Select</option>` +
+    items.map(i => `<option value="${i.id}">${i.label}</option>`).join("");
 }
 
-function buildCombos() {
-  const combos = [];
-  for (const front of DESIGN_LIST) {
-    combos.push({
-      combo_id: `FRONT-${front.id}`,
-      placement_mode: "front_only",
-      front_design: front.id,
-      back_design: null
-    });
+function syncUI(){
+  const mode = el.placement.value;
 
-    combos.push({
-      combo_id: `SAME-${front.id}`,
-      placement_mode: "same",
-      front_design: front.id,
-      back_design: front.id
-    });
-
-    for (const back of DESIGN_LIST) {
-      if (back.id === front.id) continue;
-      combos.push({
-        combo_id: `FREE-${front.id}-${back.id}`,
-        placement_mode: "freestyle",
-        front_design: front.id,
-        back_design: back.id
-      });
-    }
+  if(mode === "front_only"){
+    el.backWrap.style.display = "none";
   }
-  return combos;
-}
 
-function syncBackDesign() {
-  const placement = el.placement.value;
+  if(mode === "same"){
+    el.backWrap.style.display = "none";
+  }
 
-  if (placement === "freestyle") {
+  if(mode === "freestyle"){
     el.backWrap.style.display = "block";
-    el.backDesign.disabled = false;
-    return;
-  }
-
-  el.backWrap.style.display = "none";
-  el.backDesign.value = "";
-  el.backDesign.disabled = true;
-
-  if (placement === "same") {
-    el.backDesign.value = el.frontDesign.value;
   }
 }
 
-function findCombo() {
-  const placement = el.placement.value;
-  const front = el.frontDesign.value;
-  const back = placement === "same" ? front : el.backDesign.value;
+function render(){
+  const front = el.front.selectedOptions[0]?.textContent || "—";
+  const back = el.back.selectedOptions[0]?.textContent || "—";
 
-  return COMBOS.find(c =>
-    c.placement_mode === placement &&
-    c.front_design === front &&
-    (placement === "same" ? c.back_design === front : c.back_design === back)
-  ) || null;
-}
+  const mode = el.placement.value;
 
-function findVariant() {
-  if (!VARIANTS) return null;
-
-  const garmentId = el.garment.value;
-  const color = el.color.value;
-  const size = el.size.value;
-
-  const garment = VARIANTS.garments.find(g => g.id === garmentId);
-  if (!garment) return null;
-
-  const variant = (garment.variants || []).find(v => v.color === color && v.size === size);
-
-  if (!variant) {
-    return {
-      garment_id: garmentId,
-      printful_product_id: garment.printful_product_id,
-      color,
-      size,
-      variant_id: null
-    };
-  }
-
-  return {
-    garment_id: garmentId,
-    printful_product_id: garment.printful_product_id,
-    color,
-    size,
-    variant_id: variant.variant_id
-  };
-}
-
-async function loadVariants() {
-  try {
-    const res = await fetch("variants.json");
-    VARIANTS = await res.json();
-  } catch (e) {
-    console.error("Could not load variants.json", e);
-  }
-}
-
-function renderPreviewAndSummary() {
-  const garmentLabel = el.garment.selectedOptions[0]?.textContent || "—";
-  const colorLabel = el.color.selectedOptions[0]?.textContent || "—";
-  const sizeLabel = el.size.value || "—";
-  const placement = el.placement.value || "—";
-  const frontLabel = el.frontDesign.selectedOptions[0]?.textContent || "—";
-  const backLabel = el.backDesign.selectedOptions[0]?.textContent || "—";
-
-  const backText =
-    el.placement.value === "same" ? frontLabel :
-    el.placement.value === "freestyle" ? backLabel :
-    "—";
-
-  el.summary.innerHTML = `
-    <strong>Selection summary</strong><br />
-    Garment: ${garmentLabel}<br />
-    Size: ${sizeLabel}<br />
-    Color: ${colorLabel}<br />
-    Placement: ${placement}<br />
-    Front design: ${frontLabel}<br />
-    Back design: ${backText}
+  let summary = `
+    Garment: ${el.garment.value}<br>
+    Size: ${el.size.value}<br>
+    Color: ${el.color.value}<br>
+    Placement: ${mode}<br>
+    Front: ${front}<br>
   `;
+
+  if(mode === "same") summary += `Back: ${front}`;
+  if(mode === "freestyle") summary += `Back: ${back}`;
+
+  el.summary.innerHTML = summary;
 
   el.previewBox.innerHTML = `
     <div>
-      <strong>Preview Area</strong><br />
-      ${garmentLabel}<br />
-      ${colorLabel}<br />
-      ${el.placement.value === "front_only" ? `Front: ${frontLabel}` : ""}
-      ${el.placement.value === "same" ? `Front: ${frontLabel}<br />Back: ${frontLabel}` : ""}
-      ${el.placement.value === "freestyle" ? `Front: ${frontLabel}<br />Back: ${backLabel}` : ""}
+      <strong>Preview</strong><br>
+      ${front}<br>
+      ${mode !== "front_only" ? back : ""}
     </div>
   `;
 }
 
-function submitSelection() {
-  const combo = findCombo();
-  const variant = findVariant();
+async function loadVariants(){
+  try{
+    const res = await fetch("variants.json");
+    VARIANTS = await res.json();
+  }catch(e){}
+}
 
-  if (!combo) {
-    alert("No matching combo found.");
-    return;
-  }
-
-  if (!variant || !variant.variant_id) {
-    alert("No matching Printful variant found.");
-    return;
-  }
-
+function submit(){
   const payload = {
-    combo_id: combo.combo_id,
-    placement_mode: combo.placement_mode,
-    front_design: combo.front_design,
-    back_design: combo.back_design,
-    garment_id: variant.garment_id,
-    printful_product_id: variant.printful_product_id,
-    variant_id: variant.variant_id,
-    color: variant.color,
-    size: variant.size
+    garment: el.garment.value,
+    size: el.size.value,
+    color: el.color.value,
+    placement: el.placement.value,
+    front_design: el.front.value,
+    back_design: el.back.value
   };
 
-  window.parent.postMessage({ type: "design-selection", payload }, "*");
   console.log(payload);
+  window.parent.postMessage({type:"design-selection", payload},"*");
 }

@@ -1,98 +1,85 @@
-<div id="designerApp">
-  <div class="wrap">
-    <div class="card">
-      <div class="header">
-        <h1>Design Studio</h1>
-        <p>Choose your garment, size, color, and placement before previewing and adding to cart.</p>
-      </div>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design Studio</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
 
-      <div class="grid">
-        <div class="form">
-          <div class="row">
-            <div class="field">
-              <label for="garment">Garment type</label>
-              <select id="garment">
-                <option value="">Select garment</option>
-                <option value="tee">Tee</option>
-                <option value="long_sleeve">Long sleeve</option>
-                <option value="hoodie">Hoodie</option>
-                <option value="sweatshirt">Sweatshirt</option>
-              </select>
-            </div>
+<body>
+  <div id="designerApp">
+    <div class="wrap">
+      <div class="card">
 
-            <div class="field">
-              <label for="size">Size</label>
-              <select id="size">
-                <option value="">Select size</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="2XL">2XL</option>
-                <option value="3XL">3XL</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label for="color">Color</label>
-              <select id="color">
-                <option value="">Select color</option>
-                <option value="blue">Blue</option>
-                <option value="black">Black</option>
-                <option value="red">Red</option>
-                <option value="grey">Grey</option>
-                <option value="white">White</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="placement">One Design or Two?</label>
-              <select id="placement">
-                <option value="">Select placement</option>
-                <option value="front_only">Front only</option>
-                <option value="same">Front + Back same design</option>
-                <option value="freestyle">Front + Back different designs</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="frontDesign">Design 1</label>
-            <select id="frontDesign"></select>
-          </div>
-
-          <div class="field back-wrap" id="backWrap">
-            <label for="backDesign">Back design</label>
-            <select id="backDesign"></select>
-          </div>
-
-          <div class="actions">
-            <button class="btn preview" id="previewBtn" type="button">Preview</button>
-            <button class="btn cart" id="cartBtn" type="button">Add to cart</button>
-          </div>
+        <div class="header">
+          <h1>Design Studio</h1>
+          <p>Choose your garment, size, color, and placement before previewing and adding to cart.</p>
         </div>
 
-        <div class="preview">
-          <div class="preview-box" id="previewBox">
-            <div>
-              <strong>Preview Area</strong>
-              Your garment preview will appear here.
+        <div class="grid">
+
+          <!-- FORM -->
+          <div class="form">
+
+            <div class="row">
+              <div class="field">
+                <label for="garment">Garment type</label>
+                <select id="garment"></select>
+              </div>
+
+              <div class="field">
+                <label for="size">Size</label>
+                <select id="size"></select>
+              </div>
             </div>
+
+            <div class="row">
+              <div class="field">
+                <label for="color">Color</label>
+                <select id="color"></select>
+              </div>
+
+              <div class="field">
+                <label for="placement">Placement</label>
+                <select id="placement"></select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="frontDesign">Front Design</label>
+              <select id="frontDesign"></select>
+            </div>
+
+            <div class="field back-wrap" id="backWrap">
+              <label for="backDesign">Back Design</label>
+              <select id="backDesign"></select>
+            </div>
+
+            <div class="actions">
+              <button class="btn preview" id="previewBtn" type="button">Preview</button>
+              <button class="btn cart" id="cartBtn" type="button">Add to cart</button>
+            </div>
+
           </div>
 
-          <div class="summary" id="summary">
-            <strong>Selection summary</strong><br />
-            Garment: —<br />
-            Size: —<br />
-            Color: —<br />
-            Placement: —<br />
-            Front design: —<br />
-            Back design: —
+          <!-- PREVIEW -->
+          <div class="preview">
+            <div class="preview-box" id="previewBox">
+              <div>
+                <strong>Preview Area</strong>
+                Your garment preview will appear here.
+              </div>
+            </div>
+
+            <div class="summary" id="summary"></div>
           </div>
+
         </div>
       </div>
     </div>
   </div>
-</div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
