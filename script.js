@@ -1,17 +1,17 @@
 let VARIANTS = null;
 
 const DESIGN_LIST = [
-  { id: "design-1", label: "Embrace the Faith" },
-  { id: "design-2", label: "Lift Love" },
-  { id: "design-3", label: "Sleeping won't save you" },
-  { id: "design-4", label: "Love & Clarity Will" },
-  { id: "design-5", label: "Liberty Lives" },
-  { id: "design-6", label: "Resist" },
-  { id: "design-7", label: "Helping Hands (HH)" },
-  { id: "design-8", label: "Newton" },
-  { id: "design-9", label: "Halt the Hate" },
-  { id: "design-10", label: "Democracy won't fade on us" },
-  { id: "design-11", label: "Diversity Earth (Equity) Inclusion" }
+  { id: "design-1", label: "Embrace the Faith", image: "images/design-1.jpg" },
+  { id: "design-2", label: "Lift Love", image: "images/design-2.png" },
+  { id: "design-3", label: "Sleeping won't save you", image: "images/design-3.png" },
+  { id: "design-4", label: "Love & Clarity Will", image: "images/design-4.png" },
+  { id: "design-5", label: "Liberty Lives", image: "images/design-5.jpg" },
+  { id: "design-6", label: "Resist", image: "images/design-6.jpg" },
+  { id: "design-7", label: "Helping Hands (HH)", image: "images/design-7.png" },
+  { id: "design-8", label: "Newton", image: "images/design-8.png" },
+  { id: "design-9", label: "Halt the Hate", image: "images/design-9.png" },
+  { id: "design-10", label: "Democracy won't fade on us", image: "images/design-10.png" },
+  { id: "design-11", label: "Diversity Earth (Equity) Inclusion", image: "images/design-11.png" }
 ];
 
 const COLORS = [
@@ -26,6 +26,7 @@ const COLORS = [
 
 const GARMENTS = [
   { id: "tee", label: "Tee" },
+  { id: "long_sleeve", label: "Long Sleeve" },
   { id: "hoodie", label: "Hoodie" },
   { id: "sweatshirt", label: "Sweatshirt" }
 ];
@@ -36,10 +37,11 @@ const PLACEMENT = [
   { id: "freestyle", label: "Front + Back Freestyle" }
 ];
 
+const SIZES = ["S", "M", "L", "XL", "2XL", "3XL"].map(x => ({ id: x, label: x }));
+
 const el = {};
 
 document.addEventListener("DOMContentLoaded", async () => {
-
   el.garment = document.getElementById("garment");
   el.size = document.getElementById("size");
   el.color = document.getElementById("color");
@@ -51,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   el.summary = document.getElementById("summary");
 
   fill(el.garment, GARMENTS);
-  fill(el.size, ["S","M","L","XL","2XL","3XL"].map(x=>({id:x,label:x})));
+  fill(el.size, SIZES);
   fill(el.color, COLORS);
   fill(el.placement, PLACEMENT);
   fill(el.front, DESIGN_LIST);
@@ -61,76 +63,99 @@ document.addEventListener("DOMContentLoaded", async () => {
   el.front.addEventListener("change", sync);
   el.back.addEventListener("change", sync);
 
-  document.getElementById("previewBtn").onclick = render;
-  document.getElementById("cartBtn").onclick = submit;
+  document.getElementById("previewBtn").addEventListener("click", render);
+  document.getElementById("cartBtn").addEventListener("click", submit);
 
+  await loadVariants();
   sync();
   render();
 });
 
-function fill(select, items){
-  select.innerHTML =
-    `<option value="">Select</option>` +
-    items.map(i => `<option value="${i.id}">${i.label}</option>`).join("");
+function fill(select, items) {
+  select.innerHTML = `<option value="">Select</option>` + items.map(i => `<option value="${i.id}">${i.label}</option>`).join("");
 }
 
-function sync(){
+function labelFor(list, id) {
+  return list.find(x => x.id === id)?.label || "—";
+}
+
+function getDesign(id) {
+  return DESIGN_LIST.find(d => d.id === id) || null;
+}
+
+function sync() {
   const mode = el.placement.value;
+  el.backWrap.style.display = mode === "freestyle" ? "block" : "none";
 
-  el.backWrap.style.display =
-    mode === "freestyle" ? "block" : "none";
-
-  if(mode === "same"){
+  if (mode === "same") {
     el.back.value = el.front.value;
+  }
+
+  if (mode !== "freestyle") {
+    el.back.value = mode === "same" ? el.front.value : "";
   }
 }
 
-function render(){
+function render() {
+  const garment = labelFor(GARMENTS, el.garment.value);
+  const size = el.size.value || "—";
+  const color = labelFor(COLORS, el.color.value);
+  const mode = labelFor(PLACEMENT, el.placement.value);
 
-  const front = el.front.selectedOptions[0]?.textContent || "—";
-  const back = el.back.selectedOptions[0]?.textContent || "—";
+  const frontDesign = getDesign(el.front.value);
+  const backDesign = el.placement.value === "same" ? frontDesign : getDesign(el.back.value);
 
-  const mode = el.placement.value;
-
-  let summary = `
-    Garment: ${el.garment.value}<br>
-    Size: ${el.size.value}<br>
-    Color: ${el.color.value}<br>
+  el.summary.innerHTML = `
+    Garment: ${garment}<br>
+    Size: ${size}<br>
+    Color: ${color}<br>
     Placement: ${mode}<br>
-    Front: ${front}<br>
+    Front: ${frontDesign?.label || "—"}<br>
+    Back: ${el.placement.value === "front_only" ? "—" : (backDesign?.label || "—")}
   `;
 
-  if(mode === "same") summary += `Back: ${front}`;
-  if(mode === "freestyle") summary += `Back: ${back}`;
+  if (!frontDesign) {
+    el.preview.innerHTML = `<div><strong>Preview Area</strong></div>`;
+    return;
+  }
 
-  el.summary.innerHTML = summary;
+  if (el.placement.value === "front_only") {
+    el.preview.innerHTML = `
+      <div class="preview-stack">
+        <img src="${frontDesign.image}" alt="${frontDesign.label}">
+      </div>
+    `;
+    return;
+  }
 
   el.preview.innerHTML = `
-    <div>
-      <strong>Preview</strong><br>
-      ${front}<br>
-      ${mode !== "front_only" ? back : ""}
+    <div class="preview-pair">
+      <img src="${frontDesign.image}" alt="${frontDesign.label}">
+      <img src="${backDesign.image}" alt="${backDesign.label}">
     </div>
   `;
 }
 
-async function loadVariants(){
-  try{
+async function loadVariants() {
+  try {
     const res = await fetch("variants.json");
     VARIANTS = await res.json();
-  }catch(e){}
+  } catch (e) {
+    VARIANTS = null;
+  }
 }
 
-function submit(){
+function submit() {
+  const placement = el.placement.value;
   const payload = {
     garment: el.garment.value,
     size: el.size.value,
     color: el.color.value,
-    placement: el.placement.value,
+    placement,
     front_design: el.front.value,
-    back_design: el.back.value
+    back_design: placement === "front_only" ? "" : placement === "same" ? el.front.value : el.back.value
   };
 
   console.log(payload);
-  window.parent.postMessage({type:"design-selection", payload},"*");
+  window.parent.postMessage({ type: "design-selection", payload }, "*");
 }
