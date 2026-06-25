@@ -1,7 +1,7 @@
 let VARIANTS = null;
 
 const DESIGN_LIST = [
-  { id: "design-1", label: "Embrace the Faith", image: "images/design-1.jpg" },
+  { id: "design-1", label: "Embrace the Faith", image: "images/design-1.png" },
   { id: "design-2", label: "Lift Love", image: "images/design-2.png" },
   { id: "design-3", label: "Sleeping won't save you", image: "images/design-3.png" },
   { id: "design-4", label: "Love & Clarity Will", image: "images/design-4.png" },
