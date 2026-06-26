@@ -1,4 +1,5 @@
-let VARIANTS = null;
+let PRODUCT_DATA = null;
+let VARIANTS = null; // legacy name kept for compatibility
 
 const DESIGN_LIST = [
   { id: "design-1", label: "Embrace the Faith", image: "images/design-1.png" },
@@ -12,23 +13,6 @@ const DESIGN_LIST = [
   { id: "design-9", label: "Halt the Hate", image: "images/design-9.png" },
   { id: "design-10", label: "Democracy won't fade on us", image: "images/design-10.png" },
   { id: "design-11", label: "Diversity Earth (Equity) Inclusion", image: "images/design-11.png" }
-];
-
-const COLORS = [
-  { id: "black", label: "Black" },
-  { id: "white", label: "White" },
-  { id: "forest-green", label: "Forest Green" },
-  { id: "red", label: "Red" },
-  { id: "gold", label: "Gold" },
-  { id: "team-royal", label: "Team Royal" },
-  { id: "graphite-heather", label: "Graphite Heather" }
-];
-
-const GARMENTS = [
-  { id: "tee", label: "Tee" },
-  { id: "long_sleeve", label: "Long Sleeve" },
-  { id: "hoodie", label: "Hoodie" },
-  { id: "sweatshirt", label: "Sweatshirt" }
 ];
 
 const PLACEMENT = [
@@ -52,9 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   el.preview = document.getElementById("previewBox");
   el.summary = document.getElementById("summary");
 
-  fill(el.garment, GARMENTS);
-  fill(el.size, SIZES);
-  fill(el.color, COLORS);
+  // populate static lists
   fill(el.placement, PLACEMENT);
   fill(el.front, DESIGN_LIST);
   fill(el.back, DESIGN_LIST);
@@ -66,13 +48,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("previewBtn").addEventListener("click", render);
   document.getElementById("cartBtn").addEventListener("click", submit);
 
-  await loadVariants();
+  // load products JSON and then init UI
+  await loadProductData();
+  initGarmentDropdown();
   sync();
   render();
 });
 
-function fill(select, items) {
-  select.innerHTML = `<option value="">Select</option>` + items.map(i => `<option value="${i.id}">${i.label}</option>`).join("");
+function fill(select, items, includeBlank = true) {
+  const blank = includeBlank ? `<option value="">Select</option>` : "";
+  select.innerHTML = blank + items.map(i => `<option value="${i.id}">${i.label}</option>`).join("");
 }
 
 function labelFor(list, id) {
@@ -94,19 +79,26 @@ function sync() {
   if (mode !== "freestyle") {
     el.back.value = mode === "same" ? el.front.value : "";
   }
+
+  // when garment changes we populate colors & sizes based on product selection
+  // also keep preview info up to date
+  const garmentId = el.garment?.value;
+  if (garmentId) {
+    populateColorsAndSizes(garmentId);
+  }
 }
 
 function render() {
-  const garment = labelFor(GARMENTS, el.garment.value);
+  const garmentLabel = PRODUCT_DATA?.find(p => p.id === el.garment.value)?.title || labelFor([], el.garment.value);
   const size = el.size.value || "—";
-  const color = labelFor(COLORS, el.color.value);
+  const color = el.color.options[el.color.selectedIndex]?.text || "—";
   const mode = labelFor(PLACEMENT, el.placement.value);
 
   const frontDesign = getDesign(el.front.value);
   const backDesign = el.placement.value === "same" ? frontDesign : getDesign(el.back.value);
 
   el.summary.innerHTML = `
-    Garment: ${garment}<br>
+    Garment: ${garmentLabel}<br>
     Size: ${size}<br>
     Color: ${color}<br>
     Placement: ${mode}<br>
@@ -136,26 +128,163 @@ function render() {
   `;
 }
 
-async function loadVariants() {
+async function loadProductData() {
   try {
-    const res = await fetch("variants.json");
-    VARIANTS = await res.json();
+    const res = await fetch("garments_with_product_ids.json");
+    PRODUCT_DATA = await res.json();
+    // keep VARIANTS reference for backward compatibility if other code expects it
+    VARIANTS = PRODUCT_DATA;
   } catch (e) {
-    VARIANTS = null;
+    console.error("Failed to load product data:", e);
+    PRODUCT_DATA = [];
   }
 }
 
-function submit() {
-  const placement = el.placement.value;
+function initGarmentDropdown() {
+  if (!PRODUCT_DATA || PRODUCT_DATA.length === 0) {
+    // fallback to your earlier GARMENTS if product file missing
+    const FALLBACK_GARMENTS = [
+      { id: "tee", label: "Tee" },
+      { id: "long_sleeve", label: "Long Sleeve" },
+      { id: "hoodie", label: "Hoodie" },
+      { id: "sweatshirt", label: "Sweatshirt" }
+    ];
+    fill(el.garment, FALLBACK_GARMENTS);
+    return;
+  }
+
+  // build garment dropdown from PRODUCT_DATA
+  const garmentOptions = PRODUCT_DATA.map(p => ({ id: p.id, label: p.title || p.label || p.id }));
+  fill(el.garment, garmentOptions);
+
+  // when garment selection changes, repopulate color/size
+  el.garment.addEventListener("change", () => {
+    populateColorsAndSizes(el.garment.value);
+    render();
+  });
+
+  // also update render when color/size change
+  el.color.addEventListener("change", render);
+  el.size.addEventListener("change", render);
+}
+
+function populateColorsAndSizes(garmentId) {
+  const product = PRODUCT_DATA.find(p => p.id === garmentId);
+  if (!product) {
+    fill(el.color, [], false);
+    fill(el.size, SIZES);
+    return;
+  }
+
+  // colors and sizes in the file may already be listed; use them if present
+  const colors = (product.colors && product.colors.length)
+    ? product.colors.map(c => ({ id: slugify(c), label: c }))
+    : deriveColorsFromVariants(product);
+
+  const sizes = (product.sizes && product.sizes.length)
+    ? product.sizes.map(s => ({ id: s, label: s }))
+    : SIZES;
+
+  fill(el.color, colors);
+  fill(el.size, sizes);
+}
+
+function deriveColorsFromVariants(product) {
+  const seen = new Set();
+  const out = [];
+  (product.variants || []).forEach(v => {
+    const c = v.color || v.color_name || v.colorName;
+    if (!c) return;
+    if (!seen.has(c.toLowerCase())) {
+      seen.add(c.toLowerCase());
+      out.push({ id: slugify(c), label: c });
+    }
+  });
+  return out;
+}
+
+function slugify(str) {
+  if (!str) return "";
+  return String(str).trim().toLowerCase().replace(/\s+/g, "-");
+}
+
+function findProductById(id) {
+  return PRODUCT_DATA?.find(p => p.id === id) || null;
+}
+
+function findVariant(product, colorSlug, size) {
+  if (!product) return null;
+  const variants = product.variants || [];
+  // Try matching by normalized color and size fields (some entries use 'variantid' / 'color' / 'size')
+  const colorNormalized = (colorSlug || "").replace(/-/g, " ").toLowerCase();
+  return variants.find(v => {
+    const vColor = (v.color || v.color_name || "").toString().toLowerCase();
+    const vSize = (v.size || v.size_name || "").toString();
+    return vColor === colorNormalized || vColor.replace(/\s+/g, "-") === colorSlug;
+  })?.filterBySize?.bind ? null : variants.find(v => {
+    const vColor = (v.color || v.color_name || "").toString().toLowerCase();
+    const vSize = (v.size || v.size_name || "").toString();
+    return (vColor === colorNormalized || vColor.replace(/\s+/g, "-") === colorSlug) && vSize === size;
+  }) || variants.find(v => {
+    const vSize = (v.size || v.size_name || "").toString();
+    return vSize === size; // fallback to size-only match
+  }) || null;
+}
+
+// Simpler variant finder which handles the JSON shape found in your file:
+function findVariantSimple(product, color, size) {
+  if (!product) return null;
+  const variants = product.variants || [];
+  const colorLower = (color || "").toString().toLowerCase();
+  const sizeStr = (size || "").toString();
+  return variants.find(v => {
+    const vColor = (v.color || "").toString().toLowerCase();
+    const vSize = (v.size || "").toString();
+    return vColor === colorLower && vSize === sizeStr;
+  }) || null;
+}
+
+async function submit() {
+  const garmentId = el.garment.value;
+  const colorId = el.color.value;
+  const size = el.size.value;
+  const frontDesign = getDesign(el.front.value);
+  const backDesign = el.placement.value === "same" ? frontDesign : getDesign(el.back.value);
+
+  const product = findProductById(garmentId);
+  if (!product) {
+    alert("Selected garment not found in product data.");
+    return;
+  }
+
+  // colorId is slugified; convert back to label for matching
+  const colorLabel = (product.colors || []).find(c => slugify(c) === colorId) || colorId.replace(/-/g, " ");
+
+  // Find matching variant
+  const variant = findVariantSimple(product, colorLabel, size);
+
+  if (!variant) {
+    // helpful debug message with available options
+    console.warn("No variant matched. Product:", product.printfulproductid, "Available variants:", product.variants || []);
+    alert("No matching variant found for that color/size. Check console for details.");
+    return;
+  }
+
+  // Build the payload you want to return or send to Printful
   const payload = {
-    garment: el.garment.value,
-    size: el.size.value,
-    color: el.color.value,
-    placement,
-    front_design: el.front.value,
-    back_design: placement === "front_only" ? "" : placement === "same" ? el.front.value : el.back.value
+    garment: garmentId,
+    title: product.title || product.label || garmentId,
+    printfulproductid: product.printfulproductid || null,
+    variantid: variant.variantid || variant.variant_id || null,
+    sku: variant.sku || null,
+    price: variant.price || null,
+    color: variant.color || colorLabel,
+    size: variant.size || size,
+    placement: el.placement.value,
+    front_design: frontDesign?.id || "",
+    back_design: el.placement.value === "front_only" ? "" : (backDesign?.id || "")
   };
 
-  console.log(payload);
+  // Keep existing parent postMessage behavior so embedding stays compatible
   window.parent.postMessage({ type: "design-selection", payload }, "*");
-}
+  console.log("Design selection payload:", payload);
