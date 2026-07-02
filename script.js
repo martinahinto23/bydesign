@@ -47,8 +47,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   el.front = document.getElementById("frontDesign");
   el.backWrap = document.getElementById("backWrap");
   el.back = document.getElementById("backDesign");
-  el.variantFile = document.getElementById("variantFile");
-  el.variantStatus = document.getElementById("variantStatus");
   el.preview = document.getElementById("previewBox");
   el.summary = document.getElementById("summary");
   el.variantId = document.getElementById("printful_variant_id");
@@ -67,7 +65,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   el.placement.addEventListener("change", sync);
   el.front.addEventListener("change", sync);
   el.back.addEventListener("change", sync);
-  el.variantFile.addEventListener("change", handleVariantUpload);
 
   document.getElementById("previewBtn").addEventListener("click", render);
   document.getElementById("cartBtn").addEventListener("click", submit);
@@ -166,73 +163,9 @@ async function loadVariants() {
     const res = await fetch("variants.json");
     PRODUCT_DATA = await res.json();
     VARIANTS = PRODUCT_DATA.variants || [];
-    if (el && el.variantStatus) {
-      el.variantStatus.textContent = VARIANTS.length
-        ? `Loaded ${VARIANTS.length} variants from variants.json`
-        : "";
-    }
   } catch (e) {
     PRODUCT_DATA = null;
     VARIANTS = [];
-  }
-}
-
-function splitCsvLine(line) {
-  const fields = [];
-  let field = "";
-  let inQuotes = false;
-
-  for (let i = 0; i < line.length; i += 1) {
-    const char = line[i];
-    if (char === '"') {
-      if (inQuotes && line[i + 1] === '"') {
-        field += '"';
-        i += 1;
-      } else {
-        inQuotes = !inQuotes;
-      }
-    } else if (char === ',' && !inQuotes) {
-      fields.push(field);
-      field = "";
-    } else {
-      field += char;
-    }
-  }
-
-  fields.push(field);
-  return fields;
-}
-
-function parseCsv(text) {
-  const lines = text
-    .split(/\r?\n/)
-    .map(line => line.trim())
-    .filter(Boolean);
-
-  if (!lines.length) return [];
-
-  const headers = splitCsvLine(lines[0]).map(header => header.trim());
-  return lines.slice(1).map(line => {
-    const values = splitCsvLine(line);
-    const entry = {};
-    headers.forEach((header, index) => {
-      entry[header] = values[index] ? values[index].trim() : "";
-    });
-    return entry;
-  });
-}
-
-async function handleVariantUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  try {
-    const text = await file.text();
-    VARIANTS = parseCsv(text);
-    PRODUCT_DATA = { variants: VARIANTS };
-    el.variantStatus.textContent = `Loaded ${VARIANTS.length} variants from ${file.name}`;
-  } catch (error) {
-    el.variantStatus.textContent = `Unable to read ${file.name}`;
   }
 }
 
