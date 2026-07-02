@@ -2,12 +2,12 @@ let PRODUCT_DATA = null;
 let VARIANTS = [];
 
 const DESIGN_LIST = [
-  { id: "design-1", label: "Embrace the Faith", image: "images/design-1.png" },
+  { id: "design-1", label: "Embrace the Faith", image: "images/design-1.jpg" },
   { id: "design-2", label: "Lift Love", image: "images/design-2.png" },
   { id: "design-3", label: "Sleeping won't save you", image: "images/design-3.png" },
   { id: "design-4", label: "Love & Clarity Will", image: "images/design-4.png" },
-  { id: "design-5", label: "Liberty Lives", image: "images/design-5.png" },
-  { id: "design-6", label: "Resist", image: "images/design-6.png" },
+  { id: "design-5", label: "Liberty Lives", image: "images/design-5.jpg" },
+  { id: "design-6", label: "Resist", image: "images/design-6.jpg" },
   { id: "design-7", label: "Helping Hands (HH)", image: "images/design-7.png" },
   { id: "design-8", label: "Newton", image: "images/design-8.png" },
   { id: "design-9", label: "Halt the Hate", image: "images/design-9.png" },
@@ -61,6 +61,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   fill(el.front, DESIGN_LIST);
   fill(el.back, DESIGN_LIST);
 
+  el.garment.addEventListener("change", render);
+  el.size.addEventListener("change", render);
+  el.color.addEventListener("change", render);
   el.placement.addEventListener("change", sync);
   el.front.addEventListener("change", sync);
   el.back.addEventListener("change", sync);
@@ -101,6 +104,26 @@ function sync() {
   render();
 }
 
+function getCurrentPayload() {
+  const placement = el.placement.value;
+  return {
+    garment: el.garment.value,
+    size: el.size.value,
+    color: el.color.value,
+    placement,
+    front_design: el.front.value,
+    back_design: placement === "front_only" ? "" : placement === "same" ? el.front.value : el.back.value
+  };
+}
+
+function updateHiddenIds() {
+  const payload = getCurrentPayload();
+  const matched = findVariant(payload);
+
+  el.variantId.value = matched?.printful_variant_id || "";
+  el.productId.value = matched?.printful_product_id || "";
+}
+
 function render() {
   const garment = labelFor(GARMENTS, el.garment.value);
   const size = el.size.value || "—";
@@ -108,6 +131,8 @@ function render() {
   const mode = labelFor(PLACEMENT, el.placement.value);
   const frontDesign = getDesign(el.front.value);
   const backDesign = el.placement.value === "same" ? frontDesign : getDesign(el.back.value);
+
+  updateHiddenIds();
 
   el.summary.innerHTML =
     `Garment: ${garment}<br>` +
