@@ -202,6 +202,36 @@ function fullUrl(path) {
   return new URL(path, PUBLIC_BASE).href;
 }
 
+// Draws the cart, with a Remove button on every item
+function renderCart() {
+  if (!el.cartSummary) return;
+  el.cartSummary.innerHTML = "";
+
+  if (cart.length === 0) {
+    el.cartSummary.textContent = "Your cart is empty.";
+    return;
+  }
+
+  const title = document.createElement("div");
+  title.textContent = "In your cart:";
+  el.cartSummary.append(title);
+
+  cart.forEach((item, index) => {
+    const row = document.createElement("div");
+    const text = document.createElement("span");
+    text.textContent = item.label + " ";
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = "Remove";
+    btn.addEventListener("click", () => {
+      cart.splice(index, 1);
+      renderCart();
+    });
+    row.append(text, btn);
+    el.cartSummary.append(row);
+  });
+}
+
 function submit() {
   const payload = getCurrentPayload();
 
@@ -239,10 +269,9 @@ function submit() {
     label: `${labelFor(GARMENTS, payload.garment)}, ${labelFor(colorsFor(payload.garment), payload.color)}, ${payload.size} — ${front?.label || ""}`
   });
 
-  if (el.cartSummary) {
-    el.cartSummary.innerHTML =
-      "In your cart:<br>" + cart.map(i => i.label).join("<br>");
-  }
+  renderCart();
+  if (el.orderMessage) el.orderMessage.textContent = "";
+
   if (el.shippingCard) {
     el.shippingCard.style.display = "block";
     el.shippingCard.scrollIntoView({ behavior: "smooth" });
@@ -267,6 +296,10 @@ async function placeOrder(e) {
     el.orderMessage.textContent = "Your cart is empty.";
     return;
   }
+
+  // Stop double clicks from sending two orders
+  const sendBtn = el.shippingForm.querySelector('button[type="submit"]');
+  if (sendBtn) sendBtn.disabled = true;
   el.orderMessage.textContent = "Sending...";
 
   const recipient = Object.fromEntries(new FormData(el.shippingForm));
@@ -282,12 +315,25 @@ async function placeOrder(e) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ recipient, items })
     });
-    const data = await r.json();
+
+    // Read as text first so server errors show a clear message
+    const text = await r.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = { error: "Server said (" + r.status + "): " + text.slice(0, 120) };
+    }
     if (!r.ok) throw new Error(data.error);
+
+    cart.length = 0;
+    renderCart();
     el.orderMessage.textContent =
       "Test order saved! Number " + data.orderId +
       ". No payment was taken and nothing will ship.";
   } catch (err) {
     el.orderMessage.textContent = "Something went wrong: " + err.message;
+  } finally {
+    if (sendBtn) sendBtn.disabled = false;
   }
 }
