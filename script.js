@@ -1,5 +1,6 @@
 let PRODUCT_DATA = null;
 let VARIANTS = [];
+const cart = [];
 
 const DESIGN_LIST = [
   { id: "design-1", label: "Embrace the Faith", image: "images/design-1.jpg" },
@@ -15,19 +16,20 @@ const DESIGN_LIST = [
   { id: "design-11", label: "Diversity Earth (Equity) Inclusion", image: "images/design-11.png" }
 ];
 
-const COLORS = [
-  { id: "black", label: "Black" },
-  { id: "white", label: "White" },
-  { id: "navy", label: "Navy" },
-  { id: "red", label: "Red" }
-];
-
 const GARMENTS = [
   { id: "tee", label: "Tee" },
   { id: "long_sleeve", label: "Long Sleeve" },
   { id: "hoodie", label: "Hoodie" },
   { id: "sweatshirt", label: "Sweatshirt" }
 ];
+
+// Only the colors Printful really makes for each garment
+const GARMENT_COLORS = {
+  tee: ["Black", "White", "Navy", "Red"],
+  long_sleeve: ["Black", "White", "Navy"],
+  hoodie: ["Black", "White", "Grey"],
+  sweatshirt: ["Black", "White", "Crimson"]
+};
 
 const PLACEMENT = [
   { id: "front_only", label: "Front Only" },
@@ -38,6 +40,17 @@ const PLACEMENT = [
 const SIZES = ["S", "M", "L", "XL", "2XL", "3XL"].map(x => ({ id: x, label: x }));
 
 const el = {};
+
+function colorsFor(garment) {
+  return (GARMENT_COLORS[garment] || []).map(n => ({ id: n.toLowerCase(), label: n }));
+}
+
+function updateColors() {
+  const keep = el.color.value;
+  const list = colorsFor(el.garment.value);
+  fill(el.color, list);
+  if (list.some(c => c.id === keep)) el.color.value = keep;
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   el.garment = document.getElementById("garment");
@@ -51,15 +64,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   el.summary = document.getElementById("summary");
   el.variantId = document.getElementById("printful_variant_id");
   el.productId = document.getElementById("printful_product_id");
+  el.shippingCard = document.getElementById("shippingCard");
+  el.shippingForm = document.getElementById("shippingForm");
+  el.cartSummary = document.getElementById("cartSummary");
+  el.orderMessage = document.getElementById("orderMessage");
 
   fill(el.garment, GARMENTS);
   fill(el.size, SIZES);
-  fill(el.color, COLORS);
   fill(el.placement, PLACEMENT);
   fill(el.front, DESIGN_LIST);
   fill(el.back, DESIGN_LIST);
+  updateColors();
 
-  el.garment.addEventListener("change", render);
+  el.garment.addEventListener("change", () => { updateColors(); render(); });
   el.size.addEventListener("change", render);
   el.color.addEventListener("change", render);
   el.placement.addEventListener("change", sync);
@@ -68,6 +85,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.getElementById("previewBtn").addEventListener("click", render);
   document.getElementById("cartBtn").addEventListener("click", submit);
+  if (el.shippingForm) el.shippingForm.addEventListener("submit", placeOrder);
 
   await loadVariants();
   sync();
@@ -75,7 +93,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function fill(select, items) {
-  select.innerHTML = `<option value="">Select</option>` + items.map(i => `<option value="${i.id}">${i.label}</option>`).join("");
+  select.innerHTML =
+    `<option value="">Select</option>` +
+    items.map(i => `<option value="${i.id}">${i.label}</option>`).join("");
 }
 
 function labelFor(list, id) {
@@ -89,15 +109,9 @@ function getDesign(id) {
 function sync() {
   const mode = el.placement.value;
   el.backWrap.style.display = mode === "freestyle" ? "block" : "none";
-
-  if (mode === "same") {
-    el.back.value = el.front.value;
-  }
-
   if (mode !== "freestyle") {
     el.back.value = mode === "same" ? el.front.value : "";
   }
-
   render();
 }
 
@@ -109,14 +123,13 @@ function getCurrentPayload() {
     color: el.color.value,
     placement,
     front_design: el.front.value,
-    back_design: placement === "front_only" ? "" : placement === "same" ? el.front.value : el.back.value
+    back_design:
+      placement === "front_only" ? "" : placement === "same" ? el.front.value : el.back.value
   };
 }
 
 function updateHiddenIds() {
-  const payload = getCurrentPayload();
-  const matched = findVariant(payload);
-
+  const matched = findVariant(getCurrentPayload());
   el.variantId.value = matched?.printful_variant_id || "";
   el.productId.value = matched?.printful_product_id || "";
 }
@@ -124,10 +137,11 @@ function updateHiddenIds() {
 function render() {
   const garment = labelFor(GARMENTS, el.garment.value);
   const size = el.size.value || "—";
-  const color = labelFor(COLORS, el.color.value);
+  const color = labelFor(colorsFor(el.garment.value), el.color.value);
   const mode = labelFor(PLACEMENT, el.placement.value);
   const frontDesign = getDesign(el.front.value);
-  const backDesign = el.placement.value === "same" ? frontDesign : getDesign(el.back.value);
+  const backDesign =
+    el.placement.value === "same" ? frontDesign : getDesign(el.back.value);
 
   updateHiddenIds();
 
@@ -169,48 +183,109 @@ async function loadVariants() {
   }
 }
 
+// The variant only depends on garment + color + size.
+// The design is a separate image file, so any design works.
 function findVariant(payload) {
-  return VARIANTS.find(v =>
-    v.garment === payload.garment &&
-    v.color === payload.color &&
-    v.placement === payload.placement &&
-    v.front_design === payload.front_design &&
-    v.back_design === payload.back_design
-  ) || null;
+  return (
+    VARIANTS.find(
+      v =>
+        v.garment === payload.garment &&
+        v.color === payload.color &&
+        v.size === payload.size
+    ) || null
+  );
+}
+
+function fullUrl(path) {
+  return new URL(path, window.location.href).href;
 }
 
 function submit() {
-  const placement = el.placement.value;
-  const payload = {
-    garment: el.garment.value,
-    size: el.size.value,
-    color: el.color.value,
-    placement,
-    front_design: el.front.value,
-    back_design: placement === "front_only" ? "" : placement === "same" ? el.front.value : el.back.value
-  };
+  const payload = getCurrentPayload();
+
+  if (!payload.garment || !payload.size || !payload.color || !payload.placement || !payload.front_design) {
+    alert("Please choose a garment, size, color, placement, and front design.");
+    return;
+  }
+  if (payload.placement === "freestyle" && !payload.back_design) {
+    alert("Please choose a back design.");
+    return;
+  }
 
   const matched = findVariant(payload);
-
   if (!matched) {
-    alert("No matching Printful variant found for this selection.");
+    alert("That garment, size, and color combination isn't available.");
     return;
   }
 
   el.variantId.value = matched.printful_variant_id || "";
   el.productId.value = matched.printful_product_id || "";
 
-  el.variantId.dispatchEvent(new Event("input", { bubbles: true }));
-  el.variantId.dispatchEvent(new Event("change", { bubbles: true }));
-  el.productId.dispatchEvent(new Event("input", { bubbles: true }));
-  el.productId.dispatchEvent(new Event("change", { bubbles: true }));
+  // Build the design files Printful needs (public https links)
+  const files = [];
+  const front = getDesign(payload.front_design);
+  if (front) files.push({ type: "default", url: fullUrl(front.image) });
+  if (payload.placement !== "front_only") {
+    const back = getDesign(payload.back_design);
+    if (back) files.push({ type: "back", url: fullUrl(back.image) });
+  }
 
-  window.parent.postMessage({
-    type: "design-selection",
-    payload: {
-      ...payload,
-      printful_variant_id: matched.printful_variant_id,
-      printful_product_id: matched.printful_product_id
-    }
-  }, "*");
+  cart.push({
+    variant_id: matched.printful_variant_id,
+    quantity: 1,
+    files,
+    label: `${labelFor(GARMENTS, payload.garment)}, ${labelFor(colorsFor(payload.garment), payload.color)}, ${payload.size} — ${front?.label || ""}`
+  });
+
+  if (el.cartSummary) {
+    el.cartSummary.innerHTML =
+      "In your cart:<br>" + cart.map(i => i.label).join("<br>");
+  }
+  if (el.shippingCard) {
+    el.shippingCard.style.display = "block";
+    el.shippingCard.scrollIntoView({ behavior: "smooth" });
+  }
+
+  window.parent.postMessage(
+    {
+      type: "design-selection",
+      payload: {
+        ...payload,
+        printful_variant_id: matched.printful_variant_id,
+        printful_product_id: matched.printful_product_id
+      }
+    },
+    "*"
+  );
+}
+
+async function placeOrder(e) {
+  e.preventDefault();
+  if (cart.length === 0) {
+    el.orderMessage.textContent = "Your cart is empty.";
+    return;
+  }
+  el.orderMessage.textContent = "Sending...";
+
+  const recipient = Object.fromEntries(new FormData(el.shippingForm));
+  const items = cart.map(i => ({
+    variant_id: i.variant_id,
+    quantity: i.quantity,
+    files: i.files
+  }));
+
+  try {
+    const r = await fetch("/api/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ recipient, items })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error);
+    el.orderMessage.textContent =
+      "Test order saved! Number " + data.orderId +
+      ". No payment was taken and nothing will ship.";
+  } catch (err) {
+    el.orderMessage.textContent = "Something went wrong: " + err.message;
+  }
 }
