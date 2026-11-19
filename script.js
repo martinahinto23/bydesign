@@ -196,8 +196,10 @@ function findVariant(payload) {
   );
 }
 
+const PUBLIC_BASE = "https://bydesign-mocha.vercel.app/";
+
 function fullUrl(path) {
-  return new URL(path, window.location.href).href;
+  return new URL(path, PUBLIC_BASE).href;
 }
 
 function submit() {
