@@ -72,7 +72,42 @@
       </div>
     </div>
   </div>
-
+<div class="wrap">
+  <div class="card" id="shippingCard" style="display:none">
+    <div class="header">
+      <h2>Where should we send it?</h2>
+      <p id="cartSummary"></p>
+    </div>
+    <form id="shippingForm" class="form">
+      <div class="field"><label for="s_name">Full name</label>
+        <input id="s_name" name="name" required></div>
+      <div class="field"><label for="s_address1">Street address</label>
+        <input id="s_address1" name="address1" required></div>
+      <div class="field"><label for="s_address2">Apt, suite (optional)</label>
+        <input id="s_address2" name="address2"></div>
+      <div class="row">
+        <div class="field"><label for="s_city">City</label>
+          <input id="s_city" name="city" required></div>
+        <div class="field"><label for="s_state">State (like MI)</label>
+          <input id="s_state" name="state_code" required></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="s_zip">ZIP code</label>
+          <input id="s_zip" name="zip" required></div>
+        <div class="field"><label for="s_country">Country</label>
+          <input id="s_country" name="country_code" value="US" maxlength="2" required></div>
+      </div>
+      <div class="field"><label for="s_email">Email</label>
+        <input id="s_email" name="email" type="email" required></div>
+      <div class="field"><label for="s_phone">Phone (optional)</label>
+        <input id="s_phone" name="phone"></div>
+      <div class="actions">
+        <button class="btn cart" type="submit">Place order</button>
+      </div>
+    </form>
+    <p id="orderMessage"></p>
+  </div>
+</div>
   <script src="./script.js"></script>
 </body>
 </html>
