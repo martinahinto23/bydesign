@@ -3,12 +3,12 @@ let VARIANTS = [];
 const cart = [];
 
 const DESIGN_LIST = [
-  { id: "design-1", label: "Embrace the Faith", image: "images/design-1.jpg" },
+  { id: "design-1", label: "Embrace the Faith", image: "images/design-1.png" },
   { id: "design-2", label: "Lift Love", image: "images/design-2.png" },
   { id: "design-3", label: "Sleeping won't save you", image: "images/design-3.png" },
   { id: "design-4", label: "Love & Clarity Will", image: "images/design-4.png" },
-  { id: "design-5", label: "Liberty Lives", image: "images/design-5.jpg" },
-  { id: "design-6", label: "Resist", image: "images/design-6.jpg" },
+  { id: "design-5", label: "Liberty Lives", image: "images/design-5.png" },
+  { id: "design-6", label: "Resist", image: "images/design-6.png" },
   { id: "design-7", label: "Helping Hands (HH)", image: "images/design-7.png" },
   { id: "design-8", label: "Newton", image: "images/design-8.png" },
   { id: "design-9", label: "Halt the Hate", image: "images/design-9.png" },
