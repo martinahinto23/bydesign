@@ -88,19 +88,19 @@
       <div class="row">
         <div class="field"><label for="s_city">City</label>
           <input id="s_city" name="city" required></div>
-        <div class="field"><label for="s_state">State/Province (like MI)</label>
-          <input id="s_state" name="state_code" <input id="s_state" name="state_code">></div>
+        <div class="field"><label for="s_state">State / province (like MI)</label>
+          <input id="s_state" name="state_code"></div>
       </div>
       <div class="row">
-        <div class="field"><label for="s_zip">ZIP code</label>
+        <div class="field"><label for="s_zip">ZIP / postal code</label>
           <input id="s_zip" name="zip" required></div>
         <div class="field"><label for="s_country">Country</label>
           <select id="s_country" name="country_code" required>
-  <option value="US" selected>United States</option>
-  <option value="CA">Canada</option>
-  <option value="GB">United Kingdom</option>
-  <option value="AU">Australia</option>
-</select></div>
+            <option value="US" selected>United States</option>
+            <option value="CA">Canada</option>
+            <option value="GB">United Kingdom</option>
+            <option value="AU">Australia</option>
+          </select></div>
       </div>
       <div class="field"><label for="s_email">Email</label>
         <input id="s_email" name="email" type="email" required></div>
@@ -110,9 +110,7 @@
         <button class="btn cart" type="submit">Place order</button>
       </div>
     </form>
-    <p id="orderMessage"<p id="customsNote">Orders shipped outside the US may be charged import duties or taxes when the package arrives. These are paid by the customer to the destination country and aren't included in your total.</p>></p>
+    <p id="customsNote">Orders shipped outside the US may be charged import duties or taxes when the package arrives. These are paid by the customer to the destination country and aren't included in your total.</p>
+    <p id="orderMessage"></p>
   </div>
-</div>
-  <script src="./script.js"></script>
-</body>
-</html>
+</div><script src="./script.js"></script>
