@@ -1,0 +1,24 @@
+{
+  "name": "bydesign",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build-variants.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martinahinto23/bydesign.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/martinahinto23/bydesign/issues"
+  },
+  "homepage": "https://github.com/martinahinto23/bydesign#readme",
+  "dependencies": {
+    "stripe": "^23.2.0"
+  }
+}
