@@ -5,546 +5,624 @@
       "color": "black",
       "size": "S",
       "printful_product_id": 586,
-      "printful_variant_id": 15114
+      "printful_variant_id": 15114,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "black",
       "size": "M",
       "printful_product_id": 586,
-      "printful_variant_id": 15115
+      "printful_variant_id": 15115,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "black",
       "size": "L",
       "printful_product_id": 586,
-      "printful_variant_id": 15116
+      "printful_variant_id": 15116,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "black",
       "size": "XL",
       "printful_product_id": 586,
-      "printful_variant_id": 15117
+      "printful_variant_id": 15117,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "black",
       "size": "2XL",
       "printful_product_id": 586,
-      "printful_variant_id": 15118
+      "printful_variant_id": 15118,
+      "price_cents": 3600
     },
     {
       "garment": "tee",
       "color": "black",
       "size": "3XL",
       "printful_product_id": 586,
-      "printful_variant_id": 16326
+      "printful_variant_id": 16326,
+      "price_cents": 3800
     },
     {
       "garment": "tee",
       "color": "white",
       "size": "S",
       "printful_product_id": 586,
-      "printful_variant_id": 15124
+      "printful_variant_id": 15124,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "white",
       "size": "M",
       "printful_product_id": 586,
-      "printful_variant_id": 15125
+      "printful_variant_id": 15125,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "white",
       "size": "L",
       "printful_product_id": 586,
-      "printful_variant_id": 15126
+      "printful_variant_id": 15126,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "white",
       "size": "XL",
       "printful_product_id": 586,
-      "printful_variant_id": 15127
+      "printful_variant_id": 15127,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "white",
       "size": "2XL",
       "printful_product_id": 586,
-      "printful_variant_id": 15128
+      "printful_variant_id": 15128,
+      "price_cents": 3600
     },
     {
       "garment": "tee",
       "color": "white",
       "size": "3XL",
       "printful_product_id": 586,
-      "printful_variant_id": 16335
+      "printful_variant_id": 16335,
+      "price_cents": 3800
     },
     {
       "garment": "tee",
       "color": "navy",
       "size": "S",
       "printful_product_id": 586,
-      "printful_variant_id": 21555
+      "printful_variant_id": 21555,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "navy",
       "size": "M",
       "printful_product_id": 586,
-      "printful_variant_id": 21556
+      "printful_variant_id": 21556,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "navy",
       "size": "L",
       "printful_product_id": 586,
-      "printful_variant_id": 21557
+      "printful_variant_id": 21557,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "navy",
       "size": "XL",
       "printful_product_id": 586,
-      "printful_variant_id": 21558
+      "printful_variant_id": 21558,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "navy",
       "size": "2XL",
       "printful_product_id": 586,
-      "printful_variant_id": 21559
+      "printful_variant_id": 21559,
+      "price_cents": 3600
     },
     {
       "garment": "tee",
       "color": "navy",
       "size": "3XL",
       "printful_product_id": 586,
-      "printful_variant_id": 21560
+      "printful_variant_id": 21560,
+      "price_cents": 3800
     },
     {
       "garment": "tee",
       "color": "red",
       "size": "S",
       "printful_product_id": 586,
-      "printful_variant_id": 15119
+      "printful_variant_id": 15119,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "red",
       "size": "M",
       "printful_product_id": 586,
-      "printful_variant_id": 15120
+      "printful_variant_id": 15120,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "red",
       "size": "L",
       "printful_product_id": 586,
-      "printful_variant_id": 15121
+      "printful_variant_id": 15121,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "red",
       "size": "XL",
       "printful_product_id": 586,
-      "printful_variant_id": 15123
+      "printful_variant_id": 15123,
+      "price_cents": 3400
     },
     {
       "garment": "tee",
       "color": "red",
       "size": "2XL",
       "printful_product_id": 586,
-      "printful_variant_id": 15122
+      "printful_variant_id": 15122,
+      "price_cents": 3600
     },
     {
       "garment": "tee",
       "color": "red",
       "size": "3XL",
       "printful_product_id": 586,
-      "printful_variant_id": 16331
+      "printful_variant_id": 16331,
+      "price_cents": 3800
     },
     {
       "garment": "long_sleeve",
       "color": "black",
       "size": "S",
       "printful_product_id": 753,
-      "printful_variant_id": 19412
+      "printful_variant_id": 19412,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "black",
       "size": "M",
       "printful_product_id": 753,
-      "printful_variant_id": 19419
+      "printful_variant_id": 19419,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "black",
       "size": "L",
       "printful_product_id": 753,
-      "printful_variant_id": 19426
+      "printful_variant_id": 19426,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "black",
       "size": "XL",
       "printful_product_id": 753,
-      "printful_variant_id": 19433
+      "printful_variant_id": 19433,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "black",
       "size": "2XL",
       "printful_product_id": 753,
-      "printful_variant_id": 19440
+      "printful_variant_id": 19440,
+      "price_cents": 4100
     },
     {
       "garment": "long_sleeve",
       "color": "black",
       "size": "3XL",
       "printful_product_id": 753,
-      "printful_variant_id": 19447
+      "printful_variant_id": 19447,
+      "price_cents": 4300
     },
     {
       "garment": "long_sleeve",
       "color": "white",
       "size": "S",
       "printful_product_id": 753,
-      "printful_variant_id": 19418
+      "printful_variant_id": 19418,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "white",
       "size": "M",
       "printful_product_id": 753,
-      "printful_variant_id": 19425
+      "printful_variant_id": 19425,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "white",
       "size": "L",
       "printful_product_id": 753,
-      "printful_variant_id": 19432
+      "printful_variant_id": 19432,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "white",
       "size": "XL",
       "printful_product_id": 753,
-      "printful_variant_id": 19439
+      "printful_variant_id": 19439,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "white",
       "size": "2XL",
       "printful_product_id": 753,
-      "printful_variant_id": 19446
+      "printful_variant_id": 19446,
+      "price_cents": 4100
     },
     {
       "garment": "long_sleeve",
       "color": "white",
       "size": "3XL",
       "printful_product_id": 753,
-      "printful_variant_id": 19453
+      "printful_variant_id": 19453,
+      "price_cents": 4300
     },
     {
       "garment": "long_sleeve",
       "color": "navy",
       "size": "S",
       "printful_product_id": 753,
-      "printful_variant_id": 19415
+      "printful_variant_id": 19415,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "navy",
       "size": "M",
       "printful_product_id": 753,
-      "printful_variant_id": 19422
+      "printful_variant_id": 19422,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "navy",
       "size": "L",
       "printful_product_id": 753,
-      "printful_variant_id": 19429
+      "printful_variant_id": 19429,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "navy",
       "size": "XL",
       "printful_product_id": 753,
-      "printful_variant_id": 19436
+      "printful_variant_id": 19436,
+      "price_cents": 3900
     },
     {
       "garment": "long_sleeve",
       "color": "navy",
       "size": "2XL",
       "printful_product_id": 753,
-      "printful_variant_id": 19443
+      "printful_variant_id": 19443,
+      "price_cents": 4100
     },
     {
       "garment": "long_sleeve",
       "color": "navy",
       "size": "3XL",
       "printful_product_id": 753,
-      "printful_variant_id": 19450
+      "printful_variant_id": 19450,
+      "price_cents": 4300
     },
     {
       "garment": "hoodie",
       "color": "black",
       "size": "S",
       "printful_product_id": 969,
-      "printful_variant_id": 24636
+      "printful_variant_id": 24636,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "black",
       "size": "M",
       "printful_product_id": 969,
-      "printful_variant_id": 24645
+      "printful_variant_id": 24645,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "black",
       "size": "L",
       "printful_product_id": 969,
-      "printful_variant_id": 24654
+      "printful_variant_id": 24654,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "black",
       "size": "XL",
       "printful_product_id": 969,
-      "printful_variant_id": 24663
+      "printful_variant_id": 24663,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "black",
       "size": "2XL",
       "printful_product_id": 969,
-      "printful_variant_id": 24672
+      "printful_variant_id": 24672,
+      "price_cents": 5100
     },
     {
       "garment": "hoodie",
       "color": "black",
       "size": "3XL",
       "printful_product_id": 969,
-      "printful_variant_id": 24681
+      "printful_variant_id": 24681,
+      "price_cents": 5300
     },
     {
       "garment": "hoodie",
       "color": "white",
       "size": "S",
       "printful_product_id": 969,
-      "printful_variant_id": 24644
+      "printful_variant_id": 24644,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "white",
       "size": "M",
       "printful_product_id": 969,
-      "printful_variant_id": 24653
+      "printful_variant_id": 24653,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "white",
       "size": "L",
       "printful_product_id": 969,
-      "printful_variant_id": 24662
+      "printful_variant_id": 24662,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "white",
       "size": "XL",
       "printful_product_id": 969,
-      "printful_variant_id": 24671
+      "printful_variant_id": 24671,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "white",
       "size": "2XL",
       "printful_product_id": 969,
-      "printful_variant_id": 24680
+      "printful_variant_id": 24680,
+      "price_cents": 5100
     },
     {
       "garment": "hoodie",
       "color": "white",
       "size": "3XL",
       "printful_product_id": 969,
-      "printful_variant_id": 24689
+      "printful_variant_id": 24689,
+      "price_cents": 5300
     },
     {
       "garment": "hoodie",
       "color": "grey",
       "size": "S",
       "printful_product_id": 969,
-      "printful_variant_id": 24639
+      "printful_variant_id": 24639,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "grey",
       "size": "M",
       "printful_product_id": 969,
-      "printful_variant_id": 24648
+      "printful_variant_id": 24648,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "grey",
       "size": "L",
       "printful_product_id": 969,
-      "printful_variant_id": 24657
+      "printful_variant_id": 24657,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "grey",
       "size": "XL",
       "printful_product_id": 969,
-      "printful_variant_id": 24666
+      "printful_variant_id": 24666,
+      "price_cents": 4900
     },
     {
       "garment": "hoodie",
       "color": "grey",
       "size": "2XL",
       "printful_product_id": 969,
-      "printful_variant_id": 24675
+      "printful_variant_id": 24675,
+      "price_cents": 5100
     },
     {
       "garment": "hoodie",
       "color": "grey",
       "size": "3XL",
       "printful_product_id": 969,
-      "printful_variant_id": 24684
+      "printful_variant_id": 24684,
+      "price_cents": 5300
     },
     {
       "garment": "sweatshirt",
       "color": "black",
       "size": "S",
       "printful_product_id": 971,
-      "printful_variant_id": 24874
+      "printful_variant_id": 24874,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "black",
       "size": "M",
       "printful_product_id": 971,
-      "printful_variant_id": 24875
+      "printful_variant_id": 24875,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "black",
       "size": "L",
       "printful_product_id": 971,
-      "printful_variant_id": 24876
+      "printful_variant_id": 24876,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "black",
       "size": "XL",
       "printful_product_id": 971,
-      "printful_variant_id": 24877
+      "printful_variant_id": 24877,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "black",
       "size": "2XL",
       "printful_product_id": 971,
-      "printful_variant_id": 24878
+      "printful_variant_id": 24878,
+      "price_cents": 4900
     },
     {
       "garment": "sweatshirt",
       "color": "black",
       "size": "3XL",
       "printful_product_id": 971,
-      "printful_variant_id": 24879
+      "printful_variant_id": 24879,
+      "price_cents": 5100
     },
     {
       "garment": "sweatshirt",
       "color": "white",
       "size": "S",
       "printful_product_id": 971,
-      "printful_variant_id": 24946
+      "printful_variant_id": 24946,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "white",
       "size": "M",
       "printful_product_id": 971,
-      "printful_variant_id": 24947
+      "printful_variant_id": 24947,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "white",
       "size": "L",
       "printful_product_id": 971,
-      "printful_variant_id": 24948
+      "printful_variant_id": 24948,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "white",
       "size": "XL",
       "printful_product_id": 971,
-      "printful_variant_id": 24949
+      "printful_variant_id": 24949,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "white",
       "size": "2XL",
       "printful_product_id": 971,
-      "printful_variant_id": 24950
+      "printful_variant_id": 24950,
+      "price_cents": 4900
     },
     {
       "garment": "sweatshirt",
       "color": "white",
       "size": "3XL",
       "printful_product_id": 971,
-      "printful_variant_id": 24951
+      "printful_variant_id": 24951,
+      "price_cents": 5100
     },
     {
       "garment": "sweatshirt",
       "color": "crimson",
       "size": "S",
       "printful_product_id": 971,
-      "printful_variant_id": 24898
+      "printful_variant_id": 24898,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "crimson",
       "size": "M",
       "printful_product_id": 971,
-      "printful_variant_id": 24899
+      "printful_variant_id": 24899,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "crimson",
       "size": "L",
       "printful_product_id": 971,
-      "printful_variant_id": 24900
+      "printful_variant_id": 24900,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "crimson",
       "size": "XL",
       "printful_product_id": 971,
-      "printful_variant_id": 24901
+      "printful_variant_id": 24901,
+      "price_cents": 4700
     },
     {
       "garment": "sweatshirt",
       "color": "crimson",
       "size": "2XL",
       "printful_product_id": 971,
-      "printful_variant_id": 24902
+      "printful_variant_id": 24902,
+      "price_cents": 4900
     },
     {
       "garment": "sweatshirt",
       "color": "crimson",
       "size": "3XL",
       "printful_product_id": 971,
-      "printful_variant_id": 24903
+      "printful_variant_id": 24903,
+      "price_cents": 5100
     }
   ]
 }
