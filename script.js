@@ -15,9 +15,7 @@ const DESIGN_LIST = [
   { id: "design-9", label: "Halt the Hate", image: "images/design-9.png" },
   { id: "design-10", label: "Democracy won't fade on us", image: "images/design-10.png" },
   { id: "design-11", label: "Diversity Earth (Equity) Inclusion", image: "images/design-11.png" }
-  { id: "design-12", label: "Blue Wave Rising Tides", image: "images/design-12.png" sides: ["front"] }
-];
-<p id="frontOnlyNote" hidden>Rising Tides is a front print only. Back designs are coming soon.</p>
+  { id: "design-12", label: "Rising Tides", image: "images/design-12.png", frontOnly: true }
 const GARMENTS = [
   { id: "tee", label: "Tee" },
   { id: "long_sleeve", label: "Long Sleeve" },
@@ -93,6 +91,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   el.placement.addEventListener("change", sync);
   el.front.addEventListener("change", sync);
   el.back.addEventListener("change", sync);
+  function applyFrontOnly() {
+  const d = getDesign(el.front.value);
+  const frontOnly = !!(d && d.frontOnly);
+  const note = document.getElementById("frontOnlyNote");
+  if (note) note.hidden = !frontOnly;
+  for (const opt of el.placement.options) {
+    opt.disabled = frontOnly && opt.value !== "front_only";
+  }
+  if (frontOnly && el.placement.value !== "front_only") {
+    el.placement.value = "front_only";
+    el.placement.dispatchEvent(new Event("change"));
+  }
+}
+el.front.addEventListener("change", applyFrontOnly);
+applyFrontOnly();
 
   document.getElementById("previewBtn").addEventListener("click", render);
   document.getElementById("cartBtn").addEventListener("click", submit);
@@ -259,7 +272,11 @@ function renderCart() {
     row.append(text, btn);
     el.cartSummary.append(row);
   });
-
+const fd = getDesign(el.front.value);
+if (fd && fd.frontOnly && el.placement.value !== "front_only") {
+  alert("Rising Tides is front print only.");
+  return;
+}
   const total = cart.reduce((sum, i) => sum + i.price_cents * i.quantity, 0);
   const sub = document.createElement("div");
   sub.textContent = `Items: ${money(total)} (shipping is added at checkout)`;
