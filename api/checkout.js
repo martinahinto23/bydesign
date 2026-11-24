@@ -140,7 +140,7 @@ module.exports = async function handler(req, res) {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      payment_method_types: ["card"],
+      allowed_payment_method_types: ["card"],
       line_items: [
         ...lineItems.map(({ price_cents_each, ...rest }) => rest),
         ...(shippingCents > 0
