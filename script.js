@@ -17,7 +17,7 @@ const DESIGN_LIST = [
   { id: "design-11", label: "Diversity Earth (Equity) Inclusion", image: "images/design-11.png" }
   { id: "design-12", label: "Blue Wave Rising Tides", image: "images/design-12.png" sides: ["front"] }
 ];
-
+<p id="frontOnlyNote" hidden>Rising Tides is a front print only. Back designs are coming soon.</p>
 const GARMENTS = [
   { id: "tee", label: "Tee" },
   { id: "long_sleeve", label: "Long Sleeve" },
