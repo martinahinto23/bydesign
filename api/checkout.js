@@ -6,6 +6,13 @@ const IMAGE_BASE = "https://bydesign-mocha.vercel.app";
 const SITE_URL = process.env.SITE_URL || IMAGE_BASE;
 const BACK_PRINT_UPCHARGE_CENTS = 700; // must match script.js
 
+// Countries you accept. Add one only after testing a draft order to it.
+const ALLOWED_COUNTRIES = ["US", "CA", "GB", "AU"];
+// Countries where Printful needs a state or province code
+const STATE_REQUIRED = ["US", "CA", "AU"];
+// Refuse any order that would net less than this after Printful's cost and Stripe's fee
+const MIN_PROFIT_CENTS = 800;
+
 const clean = (v, max = 100) => String(v || "").trim().slice(0, max);
 const cents = (n) => Math.round(Number(n) * 100);
 const pfHeaders = () => ({
@@ -32,11 +39,14 @@ module.exports = async function handler(req, res) {
     email: clean(recipient?.email),
     phone: clean(recipient?.phone, 30),
   };
-  if (["name", "address1", "city", "state_code", "zip", "country_code"].some((k) => !to[k])) {
+  if (["name", "address1", "city", "zip", "country_code"].some((k) => !to[k])) {
     return res.status(400).json({ error: "Please fill in all shipping fields" });
   }
-  if (to.country_code !== "US") {
-    return res.status(400).json({ error: "We only ship within the United States right now." });
+  if (!ALLOWED_COUNTRIES.includes(to.country_code)) {
+    return res.status(400).json({ error: "We don't ship to that country yet." });
+  }
+  if (STATE_REQUIRED.includes(to.country_code) && !to.state_code) {
+    return res.status(400).json({ error: "Please enter your state or province code." });
   }
   if (!Array.isArray(items) || items.length === 0 || items.length > 20) {
     return res.status(400).json({ error: "Cart is empty or too big" });
@@ -71,10 +81,16 @@ module.exports = async function handler(req, res) {
     const hasBack = files.some((f) => f.type === "back");
     const unit = variant.price_cents + (hasBack ? BACK_PRINT_UPCHARGE_CENTS : 0);
 
-    pfItems.push({ variant_id: variant.printful_variant_id, quantity: qty, files });
+    pfItems.push({
+      variant_id: variant.printful_variant_id,
+      quantity: qty,
+      retail_price: (unit / 100).toFixed(2), // declared value for customs
+      files,
+    });
     itemsCents += unit * qty;
     lineItems.push({
       quantity: qty,
+      price_cents_each: unit,
       price_data: {
         currency: "usd",
         unit_amount: unit,
@@ -98,7 +114,7 @@ module.exports = async function handler(req, res) {
     const order = pfBody.result;
     draftId = order.id;
 
-    // 2. Read Printful's real cost and make sure we won't lose money
+    // 2. Read Printful's real cost and check the profit floor
     const costs = order.costs || {};
     const shippingCents = cents(costs.shipping);
     let printfulCostCents = cents(costs.total);
@@ -108,9 +124,16 @@ module.exports = async function handler(req, res) {
     if (!Number.isFinite(printfulCostCents) || !Number.isFinite(shippingCents)) {
       throw new Error("Couldn't price this order. Please try again.");
     }
-    if (itemsCents + shippingCents < printfulCostCents) {
-      console.error("PRICE TOO LOW", { itemsCents, shippingCents, printfulCostCents });
-      throw new Error("This item can't be ordered right now.");
+
+    const chargeCents = itemsCents + shippingCents;
+    const feeRate = 0.029 + (to.country_code === "US" ? 0 : 0.015); // international cards cost more
+    const feeCents = Math.round(chargeCents * feeRate + 30);
+    const profitCents = chargeCents - feeCents - printfulCostCents;
+    if (profitCents < MIN_PROFIT_CENTS) {
+      console.error("PROFIT TOO LOW", {
+        country: to.country_code, chargeCents, feeCents, printfulCostCents, profitCents,
+      });
+      throw new Error("Sorry, we can't ship this item to your location right now.");
     }
 
     // 3. Send the customer to Stripe (cards only)
@@ -119,7 +142,7 @@ module.exports = async function handler(req, res) {
       mode: "payment",
       payment_method_types: ["card"],
       line_items: [
-        ...lineItems,
+        ...lineItems.map(({ price_cents_each, ...rest }) => rest),
         ...(shippingCents > 0
           ? [{
               quantity: 1,
