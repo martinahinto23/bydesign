@@ -15,6 +15,7 @@ const DESIGN_LIST = [
   { id: "design-9", label: "Halt the Hate", image: "images/design-9.png" },
   { id: "design-10", label: "Democracy won't fade on us", image: "images/design-10.png" },
   { id: "design-11", label: "Diversity Earth (Equity) Inclusion", image: "images/design-11.png" }
+  { id: "design-12", label: "Blue Wave Rising Tides", image: "images/design-12.png" }
 ];
 
 const GARMENTS = [
