@@ -14,8 +14,10 @@ const DESIGN_LIST = [
   { id: "design-8", label: "Newton", image: "images/design-8.png" },
   { id: "design-9", label: "Halt the Hate", image: "images/design-9.png" },
   { id: "design-10", label: "Democracy won't fade on us", image: "images/design-10.png" },
-  { id: "design-11", label: "Diversity Earth (Equity) Inclusion", image: "images/design-11.png" }
+  { id: "design-11", label: "Diversity Earth (Equity) Inclusion", image: "images/design-11.png" },
   { id: "design-12", label: "Rising Tides", image: "images/design-12.png", frontOnly: true }
+];
+
 const GARMENTS = [
   { id: "tee", label: "Tee" },
   { id: "long_sleeve", label: "Long Sleeve" },
@@ -61,6 +63,21 @@ function updateColors() {
   if (list.some(c => c.id === keep)) el.color.value = keep;
 }
 
+// Front-only designs: lock placement to "Front Only" and show a note
+function applyFrontOnly() {
+  const d = getDesign(el.front.value);
+  const frontOnly = !!(d && d.frontOnly);
+  const note = document.getElementById("frontOnlyNote");
+  if (note) note.hidden = !frontOnly;
+  for (const opt of el.placement.options) {
+    opt.disabled = frontOnly && opt.value !== "front_only";
+  }
+  if (frontOnly && el.placement.value !== "front_only") {
+    el.placement.value = "front_only";
+    el.placement.dispatchEvent(new Event("change"));
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   el.garment = document.getElementById("garment");
   el.size = document.getElementById("size");
@@ -82,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   fill(el.size, SIZES);
   fill(el.placement, PLACEMENT);
   fill(el.front, DESIGN_LIST);
-  fill(el.back, DESIGN_LIST);
+  fill(el.back, DESIGN_LIST.filter(d => !d.frontOnly));
   updateColors();
 
   el.garment.addEventListener("change", () => { updateColors(); render(); });
@@ -91,21 +108,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   el.placement.addEventListener("change", sync);
   el.front.addEventListener("change", sync);
   el.back.addEventListener("change", sync);
-  function applyFrontOnly() {
-  const d = getDesign(el.front.value);
-  const frontOnly = !!(d && d.frontOnly);
-  const note = document.getElementById("frontOnlyNote");
-  if (note) note.hidden = !frontOnly;
-  for (const opt of el.placement.options) {
-    opt.disabled = frontOnly && opt.value !== "front_only";
-  }
-  if (frontOnly && el.placement.value !== "front_only") {
-    el.placement.value = "front_only";
-    el.placement.dispatchEvent(new Event("change"));
-  }
-}
-el.front.addEventListener("change", applyFrontOnly);
-applyFrontOnly();
+  el.front.addEventListener("change", applyFrontOnly);
+  applyFrontOnly();
 
   document.getElementById("previewBtn").addEventListener("click", render);
   document.getElementById("cartBtn").addEventListener("click", submit);
@@ -272,11 +276,7 @@ function renderCart() {
     row.append(text, btn);
     el.cartSummary.append(row);
   });
-const fd = getDesign(el.front.value);
-if (fd && fd.frontOnly && el.placement.value !== "front_only") {
-  alert("Rising Tides is front print only.");
-  return;
-}
+
   const total = cart.reduce((sum, i) => sum + i.price_cents * i.quantity, 0);
   const sub = document.createElement("div");
   sub.textContent = `Items: ${money(total)} (shipping is added at checkout)`;
@@ -290,6 +290,15 @@ function submit() {
     alert("Please choose a garment, size, color, placement, and front design.");
     return;
   }
+
+  // Front-only designs can't go on the back
+  const fd = getDesign(payload.front_design);
+  const bd = getDesign(payload.back_design);
+  if ((fd && fd.frontOnly && payload.placement !== "front_only") || (bd && bd.frontOnly)) {
+    alert("Rising Tides is a front print only. It can't be used on the back.");
+    return;
+  }
+
   if (payload.placement === "freestyle" && !payload.back_design) {
     alert("Please choose a back design.");
     return;
