@@ -15,7 +15,9 @@ const DESIGN_LIST = [
   { id: "design-9", label: "Halt the Hate", image: "images/design-9.png" },
   { id: "design-10", label: "Democracy won't fade on us", image: "images/design-10.png" },
   { id: "design-11", label: "Diversity Earth (Equity) Inclusion", image: "images/design-11.png" },
-  { id: "design-12", label: "Rising Tides", image: "images/design-12.png", frontOnly: true }
+    { id: "design-12", label: "Rising Tide Lifts All Boats", image: "images/design-12.png", frontOnly: true },
+  { id: "design-13", label: "All Politics is Personal", image: "images/design-13.png", frontOnly: true },
+  { id: "design-14", label: "Blue Wave in November", image: "images/design-14.png", frontOnly: true },
 ];
 
 const GARMENTS = [
